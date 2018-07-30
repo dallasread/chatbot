@@ -26,9 +26,6 @@ var js = {
 var css = {
     mode: mode,
     entry: ['./index.scss'],
-    output: {
-        path: __dirname + './docs/assets/'
-    },
     module: {
         rules: [
             {
@@ -43,7 +40,7 @@ var css = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'application.min.css',
+            filename: '../docs/assets/application.min.css',
         })
     ]
 };
