@@ -1,0 +1,27 @@
+$padding: 15px;
+$light-gray: #FCFCFC;
+$green: #48CF74;
+$blue: #1494FE;
+$avatar-size: 40px;
+
+@mixin clearfix() {
+    content: ' ';
+    display: block;
+    clear: both;
+
+    &:after {
+        content: ' ';
+        display: block;
+        clear: both;
+    }
+}
+
+@import "css/reset";
+@import "css/animate";
+@import "css/body";
+@import "css/container";
+@import "css/indicator";
+
+@import "chatbot/index";
+@import "message/index";
+@import "io/index";

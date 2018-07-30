@@ -1,0 +1,17 @@
+<message class="{{#if message.fromUser}}from-user{{/if}} {{#if agent.avatar}} has-avatar{{/if}}">
+    {{#if agent && !message.fromUser}}
+        <img src::{{agent.avatar}} class="avatar">
+    {{/if}}
+
+    <p>
+        {{#if message.text}}
+            {{message.text}}
+        {{else}}
+            <div class="indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        {{/if}}
+    </p>
+</message>

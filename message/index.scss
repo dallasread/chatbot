@@ -1,0 +1,36 @@
+message {
+    @include clearfix();
+
+    display: block;
+    float: left;
+    max-width: 85%;
+    margin-bottom: $padding;
+
+    p {
+        background: $light-gray;
+        padding: $padding;
+        border-radius: 4px;
+    }
+
+    &.from-user {
+        float: right;
+
+        p {
+            background: $blue;
+            color: #fff;
+        }
+    }
+
+    &.has-avatar {
+        p {
+            margin-left: $avatar-size + $padding;
+        }
+
+        .avatar {
+            width: $avatar-size;
+            height: $avatar-size;
+            border-radius: 50%;
+            float: left;
+        }
+    }
+}

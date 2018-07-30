@@ -1,0 +1,20 @@
+<io class="from-user">
+    {{#if message.input.choices}}
+        <ol>
+            {{#each message.input.choices}}
+                <li>
+                    <a href="#" onclick::{{@next(chatbot, this)}}>
+                        {{text}}
+                    </a>
+                </li>
+            {{/each}}
+        </ol>
+    {{else}}
+        {{#if message.input}}
+            <form onsubmit::{{@submit(chatbot, message)}}>
+                <input type::{{message.input.type}} name::{{message.input.name}} placeholder::{{message.input.placeholder}}>
+                <button type="submit">&raquo;</button>
+            </form>
+        {{/if}}
+    {{/if}}
+</io>

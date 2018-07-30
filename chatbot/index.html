@@ -1,0 +1,13 @@
+{{#with chatbot=chatbot agent=agent}}
+    {{#each tree}}
+        {{>message message=this chatbot=chatbot agent=agent}}
+    {{/each}}
+
+    {{#if agentIsTyping}}
+        {{>message message=agentIsTyping}}
+    {{/if}}
+
+    {{#if io}}
+        {{>io message=io}}
+    {{/if}}
+{{/with}}

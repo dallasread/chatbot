@@ -1,0 +1,48 @@
+io {
+    @include clearfix();
+
+    display: block;
+    float: right;
+    margin-bottom: $padding / 2;
+    width: 65%;
+
+    ol {
+        float: right;
+    }
+
+    li {
+        float: left;
+        margin-left: $padding / 2;
+
+        a {
+            background: $blue;
+            color: #fff;
+            padding: $padding;
+            display: block;
+            border-radius: 4px;
+        }
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="city"], textarea, select {
+        border: 1px solid $green;
+        padding: $padding;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    button {
+        position: absolute;
+        right: $padding / 2;
+        top: $padding / 2;
+        padding: $padding / 2 $padding;
+        border-radius: 4px;
+        border: 0;
+        background: $green;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    form {
+        position: relative;
+    }
+}
