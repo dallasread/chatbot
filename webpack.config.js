@@ -4,7 +4,10 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin'),
 var js = {
     mode: mode,
     entry: ['./index.js'],
-    output: { filename: '../assets/application.min.js' },
+    output: {
+        path: __dirname + '/docs/assets',
+        filename: 'application.min.js'
+    },
     module: {
         rules: [
             // { test: /\.json$/, loader: 'json-loader' },
@@ -23,7 +26,6 @@ var js = {
 var css = {
     mode: mode,
     entry: ['./index.scss'],
-    // output: { filename: './assets/application.min.css' },
     module: {
         rules: [
             {
@@ -38,7 +40,11 @@ var css = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '../assets/application.min.css'
+            filename: '../docs/assets/application.min.css',
+    output: {
+        path: __dirname + '/docs/assets',
+        filename: 'application.min.css'
+    }
         })
     ]
 };
