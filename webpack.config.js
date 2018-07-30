@@ -4,7 +4,7 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin'),
 var js = {
     mode: mode,
     entry: ['./index.js'],
-    output: { filename: './assets/application.min.js' },
+    output: { filename: '../assets/application.min.js' },
     module: {
         rules: [
             // { test: /\.json$/, loader: 'json-loader' },
@@ -38,7 +38,7 @@ var css = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: './assets/application.min.css'
+            filename: '../assets/application.min.css'
         })
     ]
 };
