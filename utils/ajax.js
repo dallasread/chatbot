@@ -7,7 +7,6 @@ function ajax(settings) {
         settings.url += '?';
 
         for (var key in settings.data) {
-            console.log(key)
             settings.url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(settings.data[key]);
         }
     } else {

@@ -11,12 +11,27 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
-<body style="background: #fcfcfc;">
+<body>
+    <style type="text/css">
+        body {
+            background: #fff;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                padding-top: 50px;
+            }
+        }
+    </style>
     <div id="container" style="max-width: 640px; margin: 0 auto; "></div>
     <script src="assets/application.min.js"></script>
     <script>
         function sendToMailChimp(user) {
             var url = 'https://us18.api.mailchimp.com/2.0/lists/subscribe.json?';
+
+            if (!user.email || !user.email.length) {
+                user.email = encodeURIComponent('phone+' + user.mobile.replace(/\D/g, '') + '@growthengine.com');
+            }
 
             url += '&apikey=50b343907ddff2caf0bd38d0d79cc5ea-us18';
             url += '&id=9a23fbfdaf';
@@ -29,7 +44,7 @@
                 url: url,
                 method: 'POST',
                 success: console.log,
-                error: console.log
+                error: console.error
             });
         }
 
@@ -64,7 +79,7 @@
             },
             bot = new window.Chatbot({
                 agent: {
-                    name: 'Patrick',
+                    name: 'Owen',
                     company: 'Hello Focus',
                     avatar: 'https://s.gravatar.com/avatar/e497bb225c12537ce0865d854484faca?s=40'
                 },

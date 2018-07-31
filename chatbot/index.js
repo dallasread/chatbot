@@ -16,7 +16,7 @@ var ChatBot = CustomElement.createElement({
                     chatbot.updateUser(attr, message.text);
                 }
 
-                chatbot.unset('io');
+                chatbot.setQuiet('io', undefined);
                 chatbot.addMessage({ text: message.text, from: 'user' }, 0, 0);
 
                 if (message.response) {
@@ -82,11 +82,10 @@ ChatBot.definePrototype({
 
         setTimeout(function() {
             _.set('agentIsTyping', _.get('defaults.agentIsTyping') || true);
-            _.scrollTop();
+            _.scrollToBottom();
 
             setTimeout(function() {
                 _.get('tree').push(message);
-                _.setQuiet('agentIsTyping', undefined);
 
                 if (message.input) {
                     _.set('io', message);
@@ -94,16 +93,18 @@ ChatBot.definePrototype({
                 }
 
                 if (message.delayed) {
+                    _.setQuiet('agentIsTyping', undefined);
                     _.addMessage(message.delayed);
                 } else {
-                    _.scrollTop();
                     _.unset('agentIsTyping');
+                    _.scrollToBottom();
                 }
+
             }, messageDelay);
         }, typingDelay);
     },
 
-    scrollTop: function scrollTop() {
+    scrollToBottom: function scrollToBottom() {
         var _ = this;
 
         setTimeout(function() {

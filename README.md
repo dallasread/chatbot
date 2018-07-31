@@ -1,4 +1,4 @@
 # TODO
 
-- Mailchimp integration
 - Gmaps location
+- Delivered

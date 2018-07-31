@@ -6,6 +6,11 @@ io {
     width: 65%;
     margin-bottom: $padding / 2;
 
+    @media (max-width: 640px) {
+        float: none;
+        width: 100%;
+    }
+
     ol {
         float: right;
     }
@@ -40,6 +45,8 @@ io {
         background: $green;
         color: #fff;
         cursor: pointer;
+        font-size: 80%;
+        line-height: 1.8;
     }
 
     form {
