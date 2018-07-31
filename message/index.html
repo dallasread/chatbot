@@ -1,5 +1,5 @@
-<message class="{{#if message.fromUser}}from-user{{/if}} {{#if agent.avatar}} has-avatar{{/if}}">
-    {{#if agent && !message.fromUser}}
+<message class="from-{{message.from}} {{#if agent.avatar}} has-avatar{{/if}}">
+    {{#if agent && !message.from}}
         <img src::{{agent.avatar}} class="avatar">
     {{/if}}
 

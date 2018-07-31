@@ -4,17 +4,35 @@
     <title>Chatbot</title>
 
     <link rel="stylesheet" type="text/css" href="assets/application.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"> -->
     <!-- <link href="assets/imgs/app-logo.png" rel="apple-touch-icon"> -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
-<body style="background: #fafafa;">
-    <div id="container" style="background: #fff; max-width: 640px; margin: 0 auto; "></div>
+<body style="background: #fcfcfc;">
+    <div id="container" style="max-width: 640px; margin: 0 auto; "></div>
     <script src="assets/application.min.js"></script>
     <script>
+        function sendToMailChimp(user) {
+            var url = 'https://us18.api.mailchimp.com/2.0/lists/subscribe.json?';
+
+            url += '&apikey=50b343907ddff2caf0bd38d0d79cc5ea-us18';
+            url += '&id=9a23fbfdaf';
+            url += '&email[email]=' + user.email;
+            url += '&merge_vars[MOBILE]=' + user.mobile;
+            url += '&double_optin=' + false;
+            url += '&send_welcome=' + false;
+
+            window.Chatbot.ajax({
+                url: url,
+                method: 'POST',
+                success: console.log,
+                error: console.log
+            });
+        }
+
         var getInfo = {
                 text: 'OK, we would like to put you in touch with some rentals. What is the best way to get a hold of you?',
                 input: {
@@ -46,12 +64,16 @@
             },
             bot = new window.Chatbot({
                 agent: {
-                    avatar: 'https://s.gravatar.com/avatar/e497bb225c12537ce0865d854484faca?s=80'
+                    name: 'Patrick',
+                    company: 'Hello Focus',
+                    avatar: 'https://s.gravatar.com/avatar/e497bb225c12537ce0865d854484faca?s=40'
                 },
                 onComplete: function onComplete() {
                     var _ = this;
-                    alert(JSON.stringify(_.get('user')));
-                    _.addMessage({ text: 'Thanks – we will respond ASAP!' });
+
+                    _.addMessage({ text: '👍 Thanks – we will respond ASAP!' });
+
+                    sendToMailChimp( _.get('user') );
                 },
                 schema: {
                     text: 'Hi! I\'m here to help you with your housing needs... Are you looking to:',

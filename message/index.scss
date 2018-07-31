@@ -21,6 +21,19 @@ message {
         }
     }
 
+    &.from-system {
+        float: none;
+        display: block;
+        max-width: none;
+
+        p {
+            background: $dark-gray;
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+        }
+    }
+
     &.has-avatar {
         p {
             margin-left: $avatar-size + $padding;

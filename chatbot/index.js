@@ -1,6 +1,7 @@
 var CustomElement = require('generate-js-custom-element'),
-    bala = require('balajs'),
-    serialize = require('../utils/serialize');
+    bala          = require('balajs'),
+    serialize     = require('../utils/serialize'),
+    ajax          = require('../utils/ajax');
 
 var ChatBot = CustomElement.createElement({
     template: require('./index.html'),
@@ -16,7 +17,7 @@ var ChatBot = CustomElement.createElement({
                 }
 
                 chatbot.unset('io');
-                chatbot.addMessage({ text: message.text, fromUser: true }, 0, 0);
+                chatbot.addMessage({ text: message.text, from: 'user' }, 0, 0);
 
                 if (message.response) {
                     chatbot.addMessage(message.response);
@@ -38,7 +39,7 @@ var ChatBot = CustomElement.createElement({
                 }
 
                 chatbot.updateUser(data);
-                chatbot.get('tree').push({ text: data[attr], fromUser: true });
+                chatbot.get('tree').push({ text: data[attr], from: 'user' });
                 chatbot.unset('io');
 
                 if (message.response) {
@@ -149,8 +150,10 @@ ChatBot.definePrototype({
     setQuiet: function setQuiet(key, value) {
         var _ = this;
 
-
+        _._data[key] = value;
     },
 });
+
+ChatBot.ajax = ajax;
 
 module.exports = ChatBot;

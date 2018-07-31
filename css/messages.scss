@@ -1,0 +1,7 @@
+messages {
+    @include clearfix();
+
+    display: block;
+    padding: $padding;
+    background: #fff;
+}
