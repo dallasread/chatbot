@@ -1,7 +1,18 @@
 var CustomElement = require('generate-js-custom-element'),
     bala          = require('balajs'),
     serialize     = require('../utils/serialize'),
-    ajax          = require('../utils/ajax');
+    ajax          = require('../utils/ajax'),
+    loadExternal = require('load-external'),
+    GMAPS_INCLUDED;
+
+function includeGmaps(apiKey, done) {
+    if (GMAPS_INCLUDED) return done();
+    if (!apiKey)        return done();
+
+    GMAPS_INCLUDED = true;
+
+    loadExternal('https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places', done);
+}
 
 var ChatBot = CustomElement.createElement({
     template: require('./index.html'),
@@ -69,15 +80,18 @@ var ChatBot = CustomElement.createElement({
     CustomElement.call(_, options);
 
     _.element.className = 'chatbot';
-
     _.addMessage(options.schema, 0);
+
+    if (_.get('ioConfig.gmaps.apiKey')) {
+        includeGmaps(_.get('ioConfig.gmaps.apiKey'));
+    }
 });
 
 ChatBot.definePrototype({
     addMessage: function addMessage(message, typingDelay, messageDelay) {
         var _ = this;
 
-        typingDelay = typeof typingDelay === 'undefined' ? _.get('delay') : typingDelay;
+        typingDelay  = typeof  typingDelay === 'undefined' ? _.get('delay') : typingDelay;
         messageDelay = typeof messageDelay === 'undefined' ? _.get('delay') : messageDelay;
 
         setTimeout(function() {
@@ -89,6 +103,7 @@ ChatBot.definePrototype({
 
                 if (message.input) {
                     _.set('io', message);
+                    _.prepGeocodeFields();
                     _.focusIO();
                 }
 
@@ -102,6 +117,25 @@ ChatBot.definePrototype({
 
             }, messageDelay);
         }, typingDelay);
+    },
+
+    prepGeocodeFields: function prepGeocodeFields() {
+        var _ = this;
+
+        if (_.autocomplete) return;
+
+        setTimeout(function() {
+            var el = bala('input[type=city]', _.element)[0];
+
+            if (!el) return;
+
+            _.autocomplete = new window.google.maps.places.Autocomplete(
+                el,
+                {
+                    types: ['geocode']
+                }
+            );
+        }, 0);
     },
 
     scrollToBottom: function scrollToBottom() {

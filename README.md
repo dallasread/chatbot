@@ -1,4 +1,3 @@
 # TODO
 
-- Gmaps location
-- Delivered
+- Delivered / Change

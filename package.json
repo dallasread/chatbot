@@ -15,6 +15,7 @@
     "html-loader": "^0.5.5",
     "img-loader": "^3.0.0",
     "json-loader": "^0.5.7",
+    "mini-css-extract-plugin": "^0.4.1",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",
@@ -24,8 +25,8 @@
   },
   "dependencies": {
     "balajs": "^1.0.7",
-    "generate-js-custom-element": "Mike96Angelo/Custom-Element#rethought-again",
-    "mini-css-extract-plugin": "^0.4.1",
+    "generate-js-custom-element": "github:Mike96Angelo/Custom-Element#components",
+    "load-external": "^1.0.2",
     "node-sass": "^4.9.2",
     "path": "^0.12.7"
   }
