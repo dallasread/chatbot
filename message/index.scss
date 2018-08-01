@@ -12,6 +12,15 @@ message {
         border-radius: 4px;
     }
 
+    .delivered {
+        font-size: 75%;
+        color: $dark-gray;
+        text-transform: uppercase;
+        float: right;
+        margin-top: $padding / 2;
+        display: block;
+    }
+
     &.from-user {
         float: right;
 

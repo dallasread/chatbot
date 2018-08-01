@@ -60,6 +60,19 @@ var ChatBot = CustomElement.createElement({
                 }
             };
         },
+
+        reset: function reset(chatbot, message) {
+            return function onReset(e) {
+                var tree = chatbot.get('tree'),
+                    index = tree.indexOf(message);
+
+                tree.splice(index, tree.length - index);
+
+                chatbot.set('io', tree[index - 1]);
+                chatbot.prepGeocodeFields();
+                chatbot.focusIO();
+            };
+        },
     },
     partials: {
         message: require('../message/index.html'),
@@ -122,14 +135,13 @@ ChatBot.definePrototype({
     prepGeocodeFields: function prepGeocodeFields() {
         var _ = this;
 
-        if (_.autocomplete) return;
-
         setTimeout(function() {
             var el = bala('input[type=city]', _.element)[0];
 
             if (!el) return;
+            if (el.gmaps) return;
 
-            _.autocomplete = new window.google.maps.places.Autocomplete(
+            el.gmaps = new window.google.maps.places.Autocomplete(
                 el,
                 {
                     types: ['geocode']

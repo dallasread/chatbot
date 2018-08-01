@@ -14,4 +14,10 @@
             </div>
         {{/if}}
     </p>
+
+    {{#if message.from === 'user'}}
+        <span class="delivered">
+            <a href="#" onclick::{{@reset(chatbot, message)}}>Edit</a>
+        </span>
+    {{/if}}
 </message>
