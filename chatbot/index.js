@@ -14,6 +14,13 @@ function includeGmaps(apiKey, done) {
     loadExternal('https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places', done);
 }
 
+function easeInOutQuad(t, b, c, d) {
+    t /= d/2;
+    if (t < 1) return c/2*t*t + b;
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
+}
+
 var ChatBot = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {
@@ -111,7 +118,6 @@ ChatBot.definePrototype({
 
         setTimeout(function() {
             _.set('agentIsTyping', _.get('defaults.agentIsTyping') || true);
-            _.scrollToBottom();
 
             setTimeout(function() {
                 _.get('tree').push(message);
@@ -127,7 +133,10 @@ ChatBot.definePrototype({
                     _.addMessage(message.delayed);
                 } else {
                     _.unset('agentIsTyping');
-                    _.scrollToBottom();
+
+                    if (message.from !== 'user') {
+                        _.scrollToBottom();
+                    }
                 }
 
             }, messageDelay);
@@ -156,7 +165,24 @@ ChatBot.definePrototype({
         var _ = this;
 
         setTimeout(function() {
-            window.scrollTo(0, _.element.scrollHeight);
+            var el = document.body,
+                start = window.scrollY,
+                change = el.scrollHeight - start,
+                currentTime = 0,
+                increment = 20,
+                duration = 1000;
+
+            function animateScroll() {
+                currentTime += increment;
+
+                window.scrollTo(0, easeInOutQuad(currentTime, start, change, duration));
+
+                if (currentTime < duration) {
+                    setTimeout(animateScroll, increment);
+                }
+            }
+
+            animateScroll();
         }, 0);
     },
 
