@@ -4,7 +4,6 @@ io {
     display: block;
     float: right;
     width: 65%;
-    margin-bottom: $padding / 2;
 
     @media (max-width: 640px) {
         float: none;
@@ -18,6 +17,7 @@ io {
     li {
         float: left;
         margin-left: $padding / 2;
+        margin-bottom: $padding / 2;
 
         a {
             background: $blue;
@@ -28,7 +28,7 @@ io {
         }
     }
 
-    input[type="text"], input[type="email"], input[type="tel"], input[type="city"], textarea, select {
+    input[type="text"], input[type="email"], input[type="tel"], input[type="city"], input[type="location"], input[type="number"], textarea, select {
         border: 1px solid $green;
         padding: $padding;
         border-radius: 4px;
@@ -47,6 +47,7 @@ io {
         cursor: pointer;
         font-size: 80%;
         line-height: 1.8;
+        margin-bottom: $padding / 2;
     }
 
     form {

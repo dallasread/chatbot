@@ -56,106 +56,225 @@
             });
         }
 
-        var getInfo = {
-                text: 'OK, we would like to put you in touch with some rentals. What is the best way to get a hold of you?',
+        var getMobile = {
+                text: 'What is your phone number?',
                 input: {
-                    choices: [
-                        {
-                            text: 'Email',
-                            response: {
-                                text: 'What is your email address?',
-                                input: {
-                                    type: 'email',
-                                    name: 'email',
-                                    placeholder: 'you@email.com'
-                                }
-                            }
-                        },
-                        {
-                            text: 'Cell',
-                            response: {
-                                text: 'What is your phone number?',
-                                input: {
-                                    type: 'tel',
-                                    name: 'mobile',
-                                    placeholder: '902-333-4444'
-                                }
-                            }
-                        }
-                    ]
+                    type: 'tel',
+                    name: 'mobile'
                 }
             },
             bot = new window.Chatbot({
-                iop: {
-                    input: {
-                        type: 'city',
-                        name: 'city',
-                        placeholder: 'Halifax, NS'
-                    }
-                },
                 ioConfig: {
                     gmaps: {
                         apiKey: 'AIzaSyDkJrJyW8E105NOz2pMzT8d9LBTKMpnlkY'
                     }
                 },
                 agent: {
-                    name: 'Owen',
-                    company: 'Hello Focus',
-                    avatar: 'https://s.gravatar.com/avatar/e497bb225c12537ce0865d854484faca?s=40'
+                    name: 'Will Nelson',
+                    company: 'HouseHelper',
+                    avatar: 'http://growthengine.com/wp-content/uploads/2017/02/profile-pic-150x150.jpg'
                 },
                 onComplete: function onComplete() {
                     var _ = this;
 
                     _.addMessage({ text: '👍 Thanks – we will respond ASAP!' });
 
-                    sendToMailChimp( _.get('user') );
+                    // sendToMailChimp( _.get('user') );
                 },
                 schema: {
-                    text: 'Hi! I\'m here to help you with your housing needs... Are you looking to:',
+                    text: 'Hi! I\'m here to help! What can we help you find?',
                     input: {
                         name: 'type',
                         choices: [
                             {
-                                text: 'Buy',
+                                text: '1 Bedroom'
+                            },
+                            {
+                                text: '1 Bedroom + Den'
+                            },
+                            {
+                                text: '2 Bedroom'
+                            },
+                            {
+                                text: '3 Bedroom'
+                            },
+                            {
+                                text: '4 Bedroom'
+                            }
+                        ]
+                    },
+                    response: {
+                        text: 'Great! I can definitely help.',
+                        delayed: {
+                            text: 'Which scenario best fits your needs?',
+                            input: {
+                                name: 'lifestyle',
+                                choices: [
+                                    {
+                                        text: 'Student living'
+                                    },
+                                    {
+                                        text: 'Luxury rental'
+                                    },
+                                    {
+                                        text: 'Assisted living'
+                                    },
+                                    {
+                                        text: 'Retirement living'
+                                    },
+                                    {
+                                        text: 'None of the above'
+                                    }
+                                ]
+                            },
+                            response: {
+                                text: 'Where do you want to rent?',
+                                input: {
+                                    name: 'location',
+                                    choices: [
+                                        {
+                                            text: 'Halifax South End'
+                                        },
+                                        {
+                                            text: 'Halifax North End'
+                                        },
+                                        {
+                                            text: 'Bedford'
+                                        },
+                                        {
+                                            text: 'Clayton Park'
+                                        },
+                                        {
+                                            text: 'Dartmouth'
+                                        },
+                                        {
+                                            text: 'Cole Harbour'
+                                        }
+                                    ]
+                                },
                                 response: {
-                                    text: 'Great! I can definitely help.',
-                                    delayed: {
-                                        text: 'Where are you looking?',
+                                    text: 'What is your desired move-in date?',
+                                    input: {
+                                        name: 'move-in',
+                                        choices: [
+                                            { text: 'January' },
+                                            { text: 'February' },
+                                            { text: 'March' },
+                                            { text: 'April' },
+                                            { text: 'May' },
+                                            { text: 'June' },
+                                            { text: 'July' },
+                                            { text: 'August' },
+                                            { text: 'September' },
+                                            { text: 'October' },
+                                            { text: 'November' },
+                                            { text: 'December' }
+                                        ]
+                                    },
+                                    response: {
+                                        text: 'What is your approximate monthly budget?',
                                         input: {
-                                            type: 'city',
-                                            name: 'city',
-                                            placeholder: 'Halifax, NS'
+                                            name: 'budget',
+                                            choices: [
+                                                { text: '500 - 1,000' },
+                                                { text: '1,000 - 1,250' },
+                                                { text: '1,250 - 1,500' },
+                                                { text: '1,500 - 1,750' },
+                                                { text: '1,750 - 2,000' },
+                                                { text: '2,000 - 2,250' },
+                                                { text: '2,250 - 2,500' },
+                                                { text: '2,500 - 2,750' },
+                                                { text: '2,750 - 3,000' },
+                                                { text: '3,000 - 4,000' },
+                                                { text: '4,000 - 5,000' },
+                                                { text: '5,000+' },
+                                            ]
                                         },
                                         response: {
-                                            text: 'What is your budget?',
+                                            text: 'What is the maximum monthly rent you are willing to pay?',
                                             input: {
-                                                name: 'budget',
-                                                choices: [
-                                                    {
-                                                        text: '$500',
-                                                        response: getInfo
+                                                type: 'number',
+                                                name: 'max-budget'
+                                            },
+                                            response: {
+                                                text: 'What is your employment status?',
+                                                input: {
+                                                    name: 'employment',
+                                                    choices: [
+                                                        { text: 'Self-employed' },
+                                                        { text: 'Student' },
+                                                        { text: 'Unemployed' },
+                                                    ]
+                                                },
+                                                response: {
+                                                    text: 'What is your approximate income?',
+                                                    input: {
+                                                        name: 'income',
+                                                        choices: [
+                                                            { text: '0' },
+                                                            { text: '10,000 - 20,000' },
+                                                            { text: '20,000 - 30,000' },
+                                                            { text: '30,000 - 50,000' },
+                                                            { text: '50,000 - 100,000' },
+                                                            { text: '100,000 - 300,000' },
+                                                            { text: '> 300,000' },
+                                                        ]
                                                     },
-                                                    {
-                                                        text: '$1,000',
-                                                        response: getInfo
-                                                    },
-                                                    {
-                                                        text: '$1,500',
-                                                        response: getInfo
+                                                    response: {
+                                                        text: 'Do you have any pets?',
+                                                        input: {
+                                                            name: 'pets',
+                                                            choices: [
+                                                                { text: 'Yes' },
+                                                                { text: 'No' },
+                                                            ]
+                                                        },
+                                                        response: {
+                                                            text: 'What is your home address?',
+                                                            input: {
+                                                                type: 'location',
+                                                                name: 'address'
+                                                            },
+                                                            response: {
+                                                                text: 'What is your full name?',
+                                                                input: {
+                                                                    type: 'text',
+                                                                    name: 'name'
+                                                                },
+                                                                response: {
+                                                                    text: 'What is your email?',
+                                                                    input: {
+                                                                        type: 'email',
+                                                                        name: 'email'
+                                                                    },
+                                                                    response: {
+                                                                        text: 'What is your preferred method of contact?',
+                                                                        input: {
+                                                                            name: 'contact-method',
+                                                                            choices: [
+                                                                                { text: 'Email' },
+                                                                                {
+                                                                                    text: 'Call',
+                                                                                    response: getMobile
+                                                                                },
+                                                                                {
+                                                                                    text: 'Text',
+                                                                                    response: getMobile
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
                                                     }
-                                                ]
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            },
-                            {
-                                text: 'Rent',
-                                response: {
-                                    text: '👍 We will have to complete this part of the config file!'
-                                }
                             }
-                        ]
+                        }
                     }
                 }
             });

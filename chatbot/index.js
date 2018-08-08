@@ -21,7 +21,8 @@ var ChatBot = CustomElement.createElement({
             return function onNext(e) {
                 e.preventDefault();
 
-                var attr = chatbot.get('io.input.name');
+                var attr = chatbot.get('io.input.name'),
+                    response = message.response || chatbot.get('io.response');
 
                 if (attr) {
                     chatbot.updateUser(attr, message.text);
@@ -30,8 +31,8 @@ var ChatBot = CustomElement.createElement({
                 chatbot.setQuiet('io', undefined);
                 chatbot.addMessage({ text: message.text, from: 'user' }, 0, 0);
 
-                if (message.response) {
-                    chatbot.addMessage(message.response);
+                if (response) {
+                    chatbot.addMessage(response);
                 } else {
                     chatbot.complete();
                 }
@@ -43,7 +44,8 @@ var ChatBot = CustomElement.createElement({
                 e.preventDefault();
 
                 var data = serialize(e.target),
-                    attr = chatbot.get('io.input.name');
+                    attr = chatbot.get('io.input.name'),
+                    response = message.response || chatbot.get('io.response');
 
                 if (!data[attr] || !data[attr].length) {
                     return;
@@ -53,8 +55,8 @@ var ChatBot = CustomElement.createElement({
                 chatbot.get('tree').push({ text: data[attr], from: 'user' });
                 chatbot.unset('io');
 
-                if (message.response) {
-                    chatbot.addMessage(message.response);
+                if (response) {
+                    chatbot.addMessage(response);
                 } else {
                     chatbot.complete();
                 }
@@ -136,7 +138,7 @@ ChatBot.definePrototype({
         var _ = this;
 
         setTimeout(function() {
-            var el = bala('input[type=city]', _.element)[0];
+            var el = bala('io input[type=location]', _.element)[0];
 
             if (!el) return;
             if (el.gmaps) return;
