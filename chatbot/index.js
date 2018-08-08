@@ -2,6 +2,7 @@ var CustomElement = require('generate-js-custom-element'),
     bala          = require('balajs'),
     serialize     = require('../utils/serialize'),
     ajax          = require('../utils/ajax'),
+    MailChimp     = require('../utils/mailchimp'),
     loadExternal = require('load-external'),
     GMAPS_INCLUDED;
 
@@ -239,5 +240,6 @@ ChatBot.definePrototype({
 });
 
 ChatBot.ajax = ajax;
+ChatBot.MailChimp = MailChimp;
 
 module.exports = ChatBot;

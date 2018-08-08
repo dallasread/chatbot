@@ -19,9 +19,10 @@ io {
         margin-left: $padding / 2;
         margin-bottom: $padding / 2;
 
-        a, a:focus, &:active, &:hover {
+        a, a:focus, a:active, a:hover {
             background: $blue;
             color: #fff;
+            padding: $padding;
             display: block;
             border-radius: 4px;
             text-decoration: none;

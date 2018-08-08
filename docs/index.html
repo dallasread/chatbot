@@ -35,66 +35,8 @@
     </style>
     <div id="bot" style="max-width: 640px; margin: 0 auto; "></div>
     <script src="assets/application.min.js"></script>
-    <script type="text/javascript">
-        function MailChimp(apiKey, listId) {
-            var _ = this;
-
-            _.apiKey = apiKey;
-            _.listId = listId;
-
-            return _;
-        }
-
-        MailChimp.prototype.buildMerge = function buildMerge(user, prefix) {
-            var _ = this,
-                str = '';
-
-            prefix = prefix || '';
-
-            for (var key in user) {
-                if (typeof user[key] === 'object') {
-                    str += _.buildMerge(user[key], prefix + key + '][');
-                } else {
-                    str += '&merge_vars[' + prefix + key + ']=' + encodeURIComponent(user[key]);
-                }
-            }
-
-            return str;
-        };
-
-        MailChimp.prototype.buildUrl = function buildUrl() {
-            var _ = this;
-            return 'https://' + _.apiKey.split('-')[1] + '.api.mailchimp.com/2.0/lists/subscribe.json';
-        };
-
-        MailChimp.prototype.save = function save(user) {
-            var _ = this,
-                url = _.buildUrl() + '?';
-
-            if (!user.EMAIL && !user.PHONE) return;
-
-            if (!user.EMAIL || !user.EMAIL.length) {
-                user.EMAIL = encodeURIComponent('phone+' + user.PHONE.replace(/\D/g, '') + '@growthengine.com');
-            }
-
-            url += '&apikey=' + _.apiKey;
-            url += '&id=' + _.listId;
-            url += '&email[email]=' + user.EMAIL;
-            url += _.buildMerge(user);
-            url += '&double_optin=' + false;
-            url += '&send_welcome=' + false;
-
-            window.Chatbot.ajax({
-                url: url,
-                async: false,
-                method: 'POST',
-                success: console.log,
-                error: console.error
-            });
-        };
-    </script>
     <script>
-        var mc = new window.MailChimp('2b05c7345099231882fedc42ef350f84-us18', 'ec3f9d6009'),
+        var mc = new window.Chatbot.MailChimp('2b05c7345099231882fedc42ef350f84-us18', 'ec3f9d6009'),
             getPhone = {
                 text: 'What is your phone number?',
                 input: {
