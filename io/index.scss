@@ -30,6 +30,12 @@ io {
     }
 
     input[type="text"], input[type="email"], input[type="tel"], input[type="city"], input[type="location"], input[type="number"], textarea, select {
+        background: #fff;
+        color: #222;
+        font-family: inherit;
+        font-size: inherit;
+        height: auto;
+        margin: 0;
         border: 1px solid $green;
         padding: $padding;
         border-radius: 4px;
