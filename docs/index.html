@@ -31,36 +31,71 @@
     </style>
     <div id="container" style="max-width: 640px; margin: 0 auto; "></div>
     <script src="assets/application.min.js"></script>
-    <script>
-        function sendToMailChimp(user) {
-            var apiKey = 'df515c5538d905362d25ef734f5c9e4e-us14',
-                listId = '',
-                url = 'https://' + apiKey.split('-')[1] + '.api.mailchimp.com/2.0/lists/subscribe.json?';
+    <script type="text/javascript">
+        function MailChimp(apiKey, listId) {
+            var _ = this;
 
-            if (!user.email || !user.email.length) {
-                user.email = encodeURIComponent('phone+' + user.mobile.replace(/\D/g, '') + '@growthengine.com');
+            _.apiKey = apiKey;
+            _.listId = listId;
+
+            return _;
+        }
+
+        MailChimp.prototype.buildMerge = function buildMerge(user, prefix) {
+            var _ = this,
+                str = '';
+
+            prefix = prefix || '';
+
+            for (var key in user) {
+                if (typeof user[key] === 'object') {
+                    str += _.buildMerge(user[key], prefix + key + '][');
+                } else {
+                    str += '&merge_vars[' + prefix + key + ']=' + encodeURIComponent(user[key]);
+                }
             }
 
-            url += '&apikey=' + apiKey;
-            url += '&id=' + listId;
-            url += '&email[email]=' + user.email;
-            url += '&merge_vars[MOBILE]=' + user.mobile;
+            return str;
+        };
+
+        MailChimp.prototype.buildUrl = function buildUrl() {
+            var _ = this;
+            return 'https://' + _.apiKey.split('-')[1] + '.api.mailchimp.com/2.0/lists/subscribe.json';
+        };
+
+        MailChimp.prototype.save = function save(user) {
+            var _ = this,
+                url = _.buildUrl() + '?';
+
+            if (!user.EMAIL && !user.PHONE) return;
+
+            if (!user.EMAIL || !user.EMAIL.length) {
+                user.EMAIL = encodeURIComponent('phone+' + user.PHONE.replace(/\D/g, '') + '@growthengine.com');
+            }
+
+            url += '&apikey=' + _.apiKey;
+            url += '&id=' + _.listId;
+            url += '&email[email]=' + user.EMAIL;
+            url += _.buildMerge(user);
             url += '&double_optin=' + false;
             url += '&send_welcome=' + false;
 
             window.Chatbot.ajax({
                 url: url,
+                async: false,
                 method: 'POST',
                 success: console.log,
                 error: console.error
             });
-        }
-
-        var getMobile = {
+        };
+    </script>
+    <script>
+        var mc = new window.MailChimp('2b05c7345099231882fedc42ef350f84-us18', 'ec3f9d6009'),
+            getPhone = {
                 text: 'What is your phone number?',
                 input: {
                     type: 'tel',
-                    name: 'mobile'
+                    name: 'PHONE'
                 }
             },
             bot = new window.Chatbot({
@@ -79,12 +114,17 @@
 
                     _.addMessage({ text: '👍 Thanks – we will respond ASAP!' });
 
-                    sendToMailChimp( _.get('user') );
+                    mc.save( _.get('user') );
+                },
+                onLeave: function onLeave() {
+                    var _ = this;
+
+                    mc.save( _.get('user') );
                 },
                 schema: {
                     text: 'Hi! I\'m here to help! What can we help you find?',
                     input: {
-                        name: 'type',
+                        name: 'INTEREST',
                         choices: [
                             { text: '1 Bedroom' },
                             { text: '1 Bedroom + Den' },
@@ -98,7 +138,7 @@
                         delayed: {
                             text: 'Which scenario best fits your needs?',
                             input: {
-                                name: 'lifestyle',
+                                name: 'LIFESTYLE',
                                 choices: [
                                     { text: 'Student living' },
                                     { text: 'Luxury rental' },
@@ -110,7 +150,7 @@
                             response: {
                                 text: 'Where do you want to rent?',
                                 input: {
-                                    name: 'location',
+                                    name: 'LOCATION',
                                     choices: [
                                         { text: 'Halifax South End' },
                                         { text: 'Halifax North End' },
@@ -121,113 +161,117 @@
                                     ]
                                 },
                                 response: {
-                                    text: 'What is your desired move-in date?',
+                                    text: 'In case we get disconnected, what is your email?',
                                     input: {
-                                        name: 'move-in',
-                                        choices: [
-                                            { text: 'January' },
-                                            { text: 'February' },
-                                            { text: 'March' },
-                                            { text: 'April' },
-                                            { text: 'May' },
-                                            { text: 'June' },
-                                            { text: 'July' },
-                                            { text: 'August' },
-                                            { text: 'September' },
-                                            { text: 'October' },
-                                            { text: 'November' },
-                                            { text: 'December' }
-                                        ]
+                                        type: 'email',
+                                        name: 'EMAIL'
                                     },
                                     response: {
-                                        text: 'What is your approximate monthly budget?',
+                                        text: 'What is your desired move-in date?',
                                         input: {
-                                            name: 'budget',
+                                            name: 'MOVEIN',
                                             choices: [
-                                                { text: '500 - 1,000' },
-                                                { text: '1,000 - 1,250' },
-                                                { text: '1,250 - 1,500' },
-                                                { text: '1,500 - 1,750' },
-                                                { text: '1,750 - 2,000' },
-                                                { text: '2,000 - 2,250' },
-                                                { text: '2,250 - 2,500' },
-                                                { text: '2,500 - 2,750' },
-                                                { text: '2,750 - 3,000' },
-                                                { text: '3,000 - 4,000' },
-                                                { text: '4,000 - 5,000' },
-                                                { text: '5,000+' },
+                                                { text: 'January' },
+                                                { text: 'February' },
+                                                { text: 'March' },
+                                                { text: 'April' },
+                                                { text: 'May' },
+                                                { text: 'June' },
+                                                { text: 'July' },
+                                                { text: 'August' },
+                                                { text: 'September' },
+                                                { text: 'October' },
+                                                { text: 'November' },
+                                                { text: 'December' }
                                             ]
                                         },
                                         response: {
-                                            text: 'What is the maximum monthly rent you are willing to pay?',
+                                            text: 'What is your approximate monthly budget?',
                                             input: {
-                                                type: 'number',
-                                                name: 'max-budget'
+                                                name: 'BUDGET',
+                                                choices: [
+                                                    { text: '500 - 1,000' },
+                                                    { text: '1,000 - 1,250' },
+                                                    { text: '1,250 - 1,500' },
+                                                    { text: '1,500 - 1,750' },
+                                                    { text: '1,750 - 2,000' },
+                                                    { text: '2,000 - 2,250' },
+                                                    { text: '2,250 - 2,500' },
+                                                    { text: '2,500 - 2,750' },
+                                                    { text: '2,750 - 3,000' },
+                                                    { text: '3,000 - 4,000' },
+                                                    { text: '4,000 - 5,000' },
+                                                    { text: '5,000+' },
+                                                ]
                                             },
                                             response: {
-                                                text: 'What is your employment status?',
+                                                text: 'What is the maximum monthly rent you are willing to pay?',
                                                 input: {
-                                                    name: 'employment',
-                                                    choices: [
-                                                        { text: 'Self-employed' },
-                                                        { text: 'Student' },
-                                                        { text: 'Unemployed' },
-                                                    ]
+                                                    type: 'number',
+                                                    name: 'MAXBUDGET'
                                                 },
                                                 response: {
-                                                    text: 'What is your approximate income?',
+                                                    text: 'What is your employment status?',
                                                     input: {
-                                                        name: 'income',
+                                                        name: 'EMPLOYMENT',
                                                         choices: [
-                                                            { text: '0' },
-                                                            { text: '10,000 - 20,000' },
-                                                            { text: '20,000 - 30,000' },
-                                                            { text: '30,000 - 50,000' },
-                                                            { text: '50,000 - 100,000' },
-                                                            { text: '100,000 - 300,000' },
-                                                            { text: '> 300,000' },
+                                                            { text: 'Student' },
+                                                            { text: 'Employed' },
+                                                            { text: 'Self-employed' },
+                                                            { text: 'Unemployed' },
+                                                            { text: 'Retired' },
                                                         ]
                                                     },
                                                     response: {
-                                                        text: 'Do you have any pets?',
+                                                        text: 'What is your approximate income?',
                                                         input: {
-                                                            name: 'pets',
+                                                            name: 'INCOME',
                                                             choices: [
-                                                                { text: 'Yes' },
-                                                                { text: 'No' },
+                                                                { text: '0' },
+                                                                { text: '10,000 - 20,000' },
+                                                                { text: '20,000 - 30,000' },
+                                                                { text: '30,000 - 50,000' },
+                                                                { text: '50,000 - 100,000' },
+                                                                { text: '100,000 - 300,000' },
+                                                                { text: '> 300,000' },
                                                             ]
                                                         },
                                                         response: {
-                                                            text: 'What is your home address?',
+                                                            text: 'Do you have any pets?',
                                                             input: {
-                                                                type: 'location',
-                                                                name: 'address'
+                                                                name: 'PETS',
+                                                                choices: [
+                                                                    { text: 'Yes' },
+                                                                    { text: 'No' },
+                                                                ]
                                                             },
                                                             response: {
-                                                                text: 'What is your full name?',
+                                                                text: 'What is your current home location?',
                                                                 input: {
-                                                                    type: 'text',
-                                                                    name: 'name'
+                                                                    type: 'location',
+                                                                    name: 'ADDRESSNOW'
                                                                 },
                                                                 response: {
-                                                                    text: 'What is your email?',
+                                                                    text: 'What is your full name?',
                                                                     input: {
-                                                                        type: 'email',
-                                                                        name: 'email'
+                                                                        type: 'text',
+                                                                        name: 'FNAME'
                                                                     },
                                                                     response: {
                                                                         text: 'What is your preferred method of contact?',
                                                                         input: {
-                                                                            name: 'contact-method',
+                                                                            name: 'CONTACTHOW',
                                                                             choices: [
-                                                                                { text: 'Email' },
+                                                                                {
+                                                                                    text: 'Email'
+                                                                                },
                                                                                 {
                                                                                     text: 'Call',
-                                                                                    response: getMobile
+                                                                                    response: getPhone
                                                                                 },
                                                                                 {
                                                                                     text: 'Text',
-                                                                                    response: getMobile
+                                                                                    response: getPhone
                                                                                 }
                                                                             ]
                                                                         }

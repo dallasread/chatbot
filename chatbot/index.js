@@ -5,6 +5,10 @@ var CustomElement = require('generate-js-custom-element'),
     loadExternal = require('load-external'),
     GMAPS_INCLUDED;
 
+function getName(name) {
+    return name.replace(/\[|\]/g, '.').replace(/\.$/, '');
+}
+
 function includeGmaps(apiKey, done) {
     if (GMAPS_INCLUDED) return done();
     if (!apiKey)        return done();
@@ -51,15 +55,16 @@ var ChatBot = CustomElement.createElement({
                 e.preventDefault();
 
                 var data = serialize(e.target),
-                    attr = chatbot.get('io.input.name'),
-                    response = message.response || chatbot.get('io.response');
+                    attr = getName(chatbot.get('io.input.name')),
+                    response = message.response || chatbot.get('io.response'),
+                    attrVal = chatbot.get(attr, data);
 
-                if (!data[attr] || !data[attr].length) {
+                if (!attrVal || !attrVal.length) {
                     return;
                 }
 
                 chatbot.updateUser(data);
-                chatbot.get('tree').push({ text: data[attr], from: 'user' });
+                chatbot.get('tree').push({ text: attrVal, from: 'user' });
                 chatbot.unset('io');
 
                 if (response) {
@@ -107,6 +112,12 @@ var ChatBot = CustomElement.createElement({
     if (_.get('ioConfig.gmaps.apiKey')) {
         includeGmaps(_.get('ioConfig.gmaps.apiKey'));
     }
+
+    window.addEventListener('beforeunload', function(e) {
+        if (typeof _.get('onLeave') === 'function') {
+            _.get('onLeave').call(_);
+        }
+    });
 });
 
 ChatBot.definePrototype({
@@ -162,8 +173,6 @@ ChatBot.definePrototype({
     },
 
     scrollToBottom: function scrollToBottom() {
-        var _ = this;
-
         setTimeout(function() {
             var el = document.body,
                 start = window.scrollY,
