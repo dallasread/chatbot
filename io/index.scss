@@ -19,12 +19,13 @@ io {
         margin-left: $padding / 2;
         margin-bottom: $padding / 2;
 
-        a {
+        a, a:focus, &:active, &:hover {
             background: $blue;
             color: #fff;
             padding: $padding;
             display: block;
             border-radius: 4px;
+            text-decoration: none;
         }
     }
 
