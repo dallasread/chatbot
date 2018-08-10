@@ -21,11 +21,17 @@ io {
 
         a, a:focus, a:active, a:hover {
             background: $blue;
+            border: 1px solid $blue;
             color: #fff;
             padding: $padding;
             display: block;
             border-radius: 4px;
             text-decoration: none;
+        }
+
+        &.unselected a {
+            background: #fff;
+            color: $blue;
         }
     }
 
@@ -42,19 +48,22 @@ io {
         width: 100%;
     }
 
+    .button, button {
+        border-radius: 4px;
+        border: 1px solid $green !important;
+        background: $green !important;
+        color: #fff;
+        cursor: pointer;
+    }
+
     button {
         position: absolute;
         right: $padding / 2;
         top: $padding / 2;
-        padding: $padding / 2 $padding;
-        border-radius: 4px;
-        border: 0;
-        background: $green;
-        color: #fff;
-        cursor: pointer;
         font-size: 80%;
         line-height: 1.8;
         margin-bottom: $padding / 2;
+        padding: $padding / 2 $padding;
     }
 
     form {

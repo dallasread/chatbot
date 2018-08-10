@@ -36,7 +36,7 @@
     <div id="bot" style="max-width: 640px; margin: 0 auto; "></div>
     <script src="assets/application.min.js"></script>
     <script>
-        var mc = new window.Chatbot.MailChimp('2b05c7345099231882fedc42ef350f84-us18', 'ec3f9d6009'),
+        var mc = new window.Chatbot.MailChimp('2b05c7345099231882fedc42ef350f84-us18', '40a75312ab'),
             getPhone = {
                 text: 'What is your phone number?',
                 input: {
@@ -60,17 +60,18 @@
 
                     _.addMessage({ text: '👍 Thanks – we will respond ASAP!' });
 
-                    mc.save( _.get('user') );
+                    // mc.save( _.get('user') );
                 },
                 onLeave: function onLeave() {
                     var _ = this;
 
-                    mc.save( _.get('user') );
+                    // mc.save( _.get('user') );
                 },
                 schema: {
                     text: 'Hi! I\'m here to help! What can we help you find?',
                     input: {
                         name: 'INTEREST',
+                        type: 'multiple',
                         choices: [
                             { text: '1 Bedroom' },
                             { text: '1 Bedroom + Den' },
@@ -97,6 +98,7 @@
                                 text: 'Where do you want to rent?',
                                 input: {
                                     name: 'LOCATION',
+                                    type: 'multiple',
                                     choices: [
                                         { text: 'Halifax South End' },
                                         { text: 'Halifax North End' },

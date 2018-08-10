@@ -1,14 +1,34 @@
 <io class="from-user">
     {{#if message.input.choices}}
-        <ol>
-            {{#each message.input.choices}}
-                <li>
-                    <a href="#" onclick::{{@next(chatbot, this)}}>
-                        {{text}}
-                    </a>
-                </li>
-            {{/each}}
-        </ol>
+        {{#if message.input.type === 'multiple'}}
+            <ol>
+                {{#each message.input.choices}}
+                    <li class="{{#if !@include(message.input.buffer, text)}}unselected{{/if}}">
+                        <a href="#" onclick::{{@toggleBuffer(chatbot, text)}}>
+                            {{text}}
+                        </a>
+                    </li>
+                {{/each}}
+
+                {{#if message.input.buffer.length}}
+                    <li>
+                        <a href="#" class="button" onclick::{{@next(chatbot, message)}}>
+                            Next &nbsp; &raquo;
+                        </a>
+                    </li>
+                {{/if}}
+            </ol>
+        {{else}}
+            <ol>
+                {{#each message.input.choices}}
+                    <li>
+                        <a href="#" onclick::{{@next(chatbot, this)}}>
+                            {{text}}
+                        </a>
+                    </li>
+                {{/each}}
+            </ol>
+        {{/if}}
     {{else}}
         {{#if message.input}}
             <form onsubmit::{{@submit(chatbot, message)}}>

@@ -30,24 +30,42 @@ var ChatBot = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {
         next: function next(chatbot, message) {
-            return function onNext(e) {
+            return function onNextMultiple(e) {
                 e.preventDefault();
 
                 var attr = chatbot.get('io.input.name'),
-                    response = message.response || chatbot.get('io.response');
+                    response = message.response || chatbot.get('io.response'),
+                    value = typeof message.input === 'object' && message.input.type === 'multiple' ? message.input.buffer.join(', ') : message.text;
 
                 if (attr) {
-                    chatbot.updateUser(attr, message.text);
+                    chatbot.updateUser(attr, value);
                 }
 
                 chatbot.setQuiet('io', undefined);
-                chatbot.addMessage({ text: message.text, from: 'user' }, 0, 0);
+                chatbot.addMessage({ text: value, from: 'user' }, 0, 0);
 
                 if (response) {
                     chatbot.addMessage(response);
                 } else {
                     chatbot.complete();
                 }
+            };
+        },
+
+        toggleBuffer: function toggleBuffer(chatbot, newMsg) {
+            return function onToggleBuffer(e) {
+                e.preventDefault();
+
+                var buffer = chatbot.get('io.input.buffer') || [],
+                    index = buffer.indexOf(newMsg);
+
+                if (index !== -1) {
+                    buffer.splice(index, 1);
+                } else {
+                    buffer.push(newMsg);
+                }
+
+                chatbot.set('io.input.buffer', buffer);
             };
         },
 
@@ -87,6 +105,10 @@ var ChatBot = CustomElement.createElement({
                 chatbot.prepGeocodeFields();
                 chatbot.focusIO();
             };
+        },
+
+        include: function include(haystack, needle) {
+            return (haystack || '').indexOf(needle) !== -1;
         },
     },
     partials: {
@@ -180,7 +202,7 @@ ChatBot.definePrototype({
                 change = el.scrollHeight - start,
                 currentTime = 0,
                 increment = 20,
-                duration = 1000;
+                duration = 500;
 
             function animateScroll() {
                 currentTime += increment;
